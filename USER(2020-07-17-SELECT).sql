@@ -128,20 +128,167 @@ from tbl_score SC
 left join tbl_student ST
 on ST.st_num = SC.sc_num
 where SC.sc_kor = 100  or  SC.sc_kor = 50 ;
+--------------------------------------------------------------------------------
+------------------------------sub query-----------------------------------------
+--------------------------------------------------------------------------------
+-- 두 번 이상 select 수행해서 결과를 만들어야 하는 경우
+-- 첫번째 select 결과르 두번째 select에 주입하여 
+-- 동시에 두 번 이상의 select를 수행하는 방법
+-- subquery는 join로 모두 구현 가능하다.
+-- 하지만 간단한 동작을 요구할때는 서브쿼리를 사용하는 것이 
+-- 쉬운 방법 이기도 하다
+-- 또한 오라클 관련정보들(구글링)중에 join보다는 서브쿼리를 
+-- 사용한 예제들이 많아서 코딩에 다소 유리한 면도 있다.
 
--- 최고,최저점이 바뀌면? 
--- 서브쿼리
+-- 서브쿼리를 사용하게 되면 select문이 여러번 실행되기때문에
+-- 약간만 코딩이 변경 되어도 상당히 느린 실행결과를 낳게 된다. 
+
+-- [첫번째 방법]where절에서 서브쿼리(subquery) 사용하기
+-- where 처음에 칼럼 명이 오고 (<=>) 
+-- 괄호를 포함 한 select 쿼리가 나와야 한다.
+-- subquery로 작동되는 select문은 기본적으로 1개의 결과만 나와야 한다.
+-- subquery의해 연산된 결과의 값을 기준으로 칼럼에 조건문을 부여하는 방식
+-- subquery는 method, 함수를 호출하는 것과 같이 subquery가 return해주는 값을
+-- 칼럼과 비교하여 최종 결과물을 낸다.
+
 select SC.sc_num, ST.st_name, SC.sc_kor
 from tbl_score SC
 left join tbl_student ST
 on ST.st_num = SC.sc_num
 where SC.sc_kor = 
-(
+    (
     select max(sc_kor) from tbl_score
-)
+    )
 
 or  SC.sc_kor = 
-(
+    (
     select min(sc_kor) from tbl_score
     );
+
+-- 국어점수의 평균을 구하고
+-- 평균 점수보다 높은 점수를 얻은 학생들의 리스트를 구하고 싶다.
+
+-- 서브쿼리가 들어갈 쿼리문을 미리 실행해보기
+select AVG(sc_kor)
+from tbl_score;
+
+select * 
+from tbl_score
+where sc_kor >= 75 ;
+
+-- 위의 두개 쿼리를 하나로 묶기
+select * 
+from tbl_score
+where sc_kor >=
+(
+select avg(sc_kor) from tbl_score
+);
+
+-- 각 학생의 점수 평균을 구하고
+-- 전체 학생의 평균을 구하여 
+-- 각 학생의 평균점수가  전체 학생의 평균 점수보다 높은 리스트를 조회하시오.
+
+select avg(sc_kor + sc_eng + sc_math + sc_music + sc_art)
+from tbl_score; -- 전체평균 371.39
+
+-- 각 학생평균
+select sc_num, ((sc_kor + sc_eng + sc_math + sc_music + sc_art)/5)
+from tbl_score;
+
+
+--------------나
+select sc_num,
+((sc_kor+sc_eng+sc_math+sc_music+sc_art)/5)
+from tbl_score
+where ((sc_kor + sc_eng + sc_math + sc_music + sc_art)/5) > 
+(select (avg(sc_kor + sc_eng + sc_math + sc_music + sc_art)/5)from tbl_score);
+-- select query문이 실행되는 순서
+-- 1. from 절이 실행되어 tbl_score 테이블의 정보(칼럼)를 가져오기
+-- 2. where이 실행되어서 실제로 가져올 데이터를 선별
+-- group by절이 있다면, 실행되어 중복된 데이터를 묶어서 하나로 만든다.
+-- 3. select에 나열된 칼럼에 값을 채워넣고,
+-- 4. select에 정의된 수식을 연산, 결과를 보일준비
+-- 5. order by는 모든 쿼리가 실행되고 가장 마지막에 연산수행되어 정렬을 한다.
+
+-- where절과 group by절에서는 alias로 설정 된 칼럼 이름을 사용 할 수 없다.
+-- order by에서는 alias로 설정된 칼럼 이름을 사용 할 수 있다.
+
+-- 위의 쿼리를 활용하여 
+-- 평균을 구하는 조건은 그대로 유지하고,
+-- 학번이 20020 이전의 학생들만 추출하기
+select sc_num,
+((sc_kor+sc_eng+sc_math+sc_music+sc_art)/5)
+from tbl_score
+where ((sc_kor + sc_eng + sc_math + sc_music + sc_art)/5) >= 
+(select (avg(sc_kor + sc_eng + sc_math + sc_music + sc_art)/5)from tbl_score)
+and sc_num < '20020';
+
+-- 성적 테이블에서 학번의 문자열을 자르기 수행하여
+-- 반 명칭만 추출하기 
+select substr(sc_num,1,4) as 반
+from tbl_score
+group by substr(sc_num,1,4)
+order by 반;
+
+-- 추출된 반 명칭이 '2006' 보다 작은 값을 갖는 반만 추출
+-- having : 성질이 where와 매우 비슷하다.
+-- 하는 일 : group by로 묶이거나, 통계함수로 생성된 값을 대상으로
+-- where 연산을 수행하는 키워드
+select substr(sc_num,1,4) as 반
+from tbl_score
+group by substr(sc_num,1,4)
+having substr(sc_num,1,4) < '2006'
+order by 반;
+
+-- 각 반의 평균을 구하는 코드
+select substr(sc_num,1,4) as 반, round(avg(sc_kor+sc_eng+sc_math)/3) 반평균
+from tbl_score
+group by substr(sc_num,1,4)
+having round(avg(sc_kor+sc_eng+sc_math)/3) > 75
+order by 반;
+
+-- 각반의 평균 서브쿼리 사용
+select substr(sc_num,1,4) as 반, round(avg(sc_kor+sc_eng+sc_math)/3) 반평균
+from tbl_score
+group by substr(sc_num,1,4)
+having round(avg(sc_kor+sc_eng+sc_math)/3) >= (
+ select round(avg(sc_kor+sc_eng+sc_math)/3) from tbl_score
+)
+order by 반;
+
+-- 2000~2005까지는 A Group, 2006~2010까지는 B Group 일 때 
+-- 반 명이 '2005' 이하, A 그룹의 반들 평균 구하기
+
+-- 비 효율적인 코드
+select substr(sc_num,1,4) as 반, round(avg(sc_kor+sc_eng+sc_math)/3) 반평균
+from tbl_score
+group by substr(sc_num,1,4)
+having substr(sc_num,1,4) <= '2005'
+order by 반;
+
+-- Having과 where
+-- 두 가지 모두 결과를 selection하는 조건문을 설정하는 방식이다
+-- having은 그룹으로 묶이거나 통계함수로 연산된 결과를 조건으로 설정하는 방식이고,
+-- where 아무런 연산이 수행되기 전에 원본 데이터를 조건으로 제한하는 방식이다,
+-- 어쩔 수 없이 통계 결과를 제한 할 때는 having을 써야한다.
+-- where절에 조건을 설정하여 데이터를 제한 한 후 연산을 수행 할 수 있다면
+-- 항상 그 방법을 우선 조건으로 설정하자
+-- having where 조건이 없으면 전체데이터를 상대로 상당한 연산을 수행 한 후 
+-- 조건을 설정하므로 상대적으로 where조건을 설정하는 것보다 느리다.
+select substr(sc_num,1,4) as 반, round(avg(sc_kor+sc_eng+sc_math)/3) 반평균
+from tbl_score
+where substr(sc_num,1,4) <= '2005'
+group by substr(sc_num,1,4)
+order by 반;
+
+ 
+
+
+
+
+
+
+
+
+
 
