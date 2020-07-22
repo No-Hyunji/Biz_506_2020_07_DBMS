@@ -7,9 +7,7 @@ import java.sql.SQLException;
 public class DBConnection {
 	
 	private static Connection dbConn = null;
-	
 	static {
-		
 		try {
 			Class.forName(DBContract.DB_DRIVER);
 			dbConn = DriverManager.getConnection(
@@ -24,11 +22,11 @@ public class DBConnection {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-	} //end static
+	} // end static
 	
 	public static Connection getDBConnection() {
 		return dbConn;
 	}
+	
 
 }

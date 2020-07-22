@@ -7,7 +7,7 @@ public class Lines {
 	static {
 		String line = String.format("%0100d",0);
 		dLine = line.replace("0", "=");
-		sLine = line.replace("0","-");
+		sLine = line.replace("0", "-");
 		
 		
 	}
