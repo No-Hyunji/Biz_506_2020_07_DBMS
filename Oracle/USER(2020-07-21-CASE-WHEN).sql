@@ -36,4 +36,5 @@ start with 1 -- 최초에 시작하는 값
 increment by 1; -- 호출될때마다 증가할 값
 insert into tbl_test(t_seq, t_name)
 values (seq_text.nextval, '홍길동');
+select * from tbl_test;
 

@@ -1,8 +1,18 @@
 --------------------------------------------------------
 --  파일이 생성됨 - 화요일-7월-21-2020   
 --------------------------------------------------------
-REM INSERTING into TBL_IOLIST
-SET DEFINE OFF;
+USE myDB;
+DROP TABLE IF EXISTS tbl_iolist;
+CREATE TABLE IF NOT EXISTS tbl_iolist (
+	IO_SEQ BIGINT PRIMARY KEY,
+	IO_DATE VARCHAR(10),
+	IO_INOUT VARCHAR(2),
+	IO_QTY INT,
+	IO_PRICE INT ,
+	IO_AMT INT,
+	IO_PCODE CHAR(5),
+	IO_BCODE CHAR(4)
+);
 Insert into TBL_IOLIST (IO_SEQ,IO_DATE,IO_INOUT,IO_QTY,IO_PRICE,IO_AMT,IO_PCODE,IO_BCODE) values (189,'2019-10-11','매입',79,587,46373,'     ','D135');
 Insert into TBL_IOLIST (IO_SEQ,IO_DATE,IO_INOUT,IO_QTY,IO_PRICE,IO_AMT,IO_PCODE,IO_BCODE) values (190,'2019-10-14','매입',91,919,83629,'     ','D011');
 Insert into TBL_IOLIST (IO_SEQ,IO_DATE,IO_INOUT,IO_QTY,IO_PRICE,IO_AMT,IO_PCODE,IO_BCODE) values (191,'2019-10-16','매입',99,491,48609,'     ','D150');

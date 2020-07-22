@@ -1,4 +1,0 @@
--- 여기는 관리자 화면입니다.
--- 새로운 TableSpace와 사용자를 등록하기
--- TableSpace : user2Ts,
--- user : user2, password user2

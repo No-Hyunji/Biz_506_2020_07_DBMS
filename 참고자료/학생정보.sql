@@ -1,8 +1,4 @@
---------------------------------------------------------
---  파일이 생성됨 - 화요일-7월-21-2020   
---------------------------------------------------------
-REM INSERTING into TBL_STUDENT
-SET DEFINE OFF;
+
 Insert into TBL_STUDENT (ST_NUM,ST_NAME,ST_DEPT,ST_GRADE,ST_TEL,ST_ADDR,ST_AGE) values ('20001','갈한수','D003',2,'010-4852-7130','경남 김해시 어방동 1088-7',null);
 Insert into TBL_STUDENT (ST_NUM,ST_NAME,ST_DEPT,ST_GRADE,ST_TEL,ST_ADDR,ST_AGE) values ('20002','강이찬','D005',3,'010-4192-1470','강원도 속초시 대포동 956-5',null);
 Insert into TBL_STUDENT (ST_NUM,ST_NAME,ST_DEPT,ST_GRADE,ST_TEL,ST_ADDR,ST_AGE) values ('20003','개원훈','D001',1,'010-3828-3745','경북 영천시 문외동 38-3번',null);
