@@ -1,0 +1,10 @@
+-- Project DEPT
+
+CREATE TABLESPACE tsDEPT
+DATAFILE 'C:/bizwork/workspace/Project_DEPT/DB/oracle_data/tsDEPT.dbf'
+SIZE 1M AUTOEXTEND ON NEXT 500K;
+
+CREATE USER dept IDENTIFIED BY dept 
+DEFAULT TABLESPACE tsDEPT; 
+
+GRANT DBA TO dept;
