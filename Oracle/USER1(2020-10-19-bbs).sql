@@ -14,3 +14,5 @@ create sequence seq_bbs
 start with 1 increment by 1;
 
 select * from tbl_bbs;
+delete from tbl_bbs;
+commit;
