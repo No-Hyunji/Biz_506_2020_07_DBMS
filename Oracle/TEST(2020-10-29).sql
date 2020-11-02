@@ -7,7 +7,7 @@ create table tbl_test(
     t_num CHAR(5), -- 문자열 5자
     t_name nVARCHAR2(20), -- 한글포함 문자열 20자
     t_tel VARCHAR2(20) -- 영문, 숫자 전용 문자열 20자 
-
+    
 );
 -- 데이터를 저장하기
 -- 엑셀에 있는 표 , t_num t_name t_tel 이렇게 표를 만들어라 
